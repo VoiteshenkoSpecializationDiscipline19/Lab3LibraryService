@@ -15,12 +15,11 @@ public class LibraryService : System.Web.Services.WebService
 {
 
     public const string XmlNS = "http://asmx.libraryService.com/";
-    private const string databaseConnection = "Data Source=(localdb)\\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\\library.mdf;Integrated Security=True";
+    private const string databaseConnection = "Data Source=(localdb)\\MSSQLLocalDB;AttachDbFilename=D:\\home\\site\\wwwroot\\App_Data\\library.mdf;Integrated Security=True";
     private static readonly HttpClient client = new HttpClient();
 
     public LibraryService()
     {
-
         //Раскомментируйте следующую строку в случае использования сконструированных компонентов 
         //InitializeComponent(); 
     }
