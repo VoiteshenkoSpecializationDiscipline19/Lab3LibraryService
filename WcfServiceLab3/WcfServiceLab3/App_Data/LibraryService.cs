@@ -4,6 +4,8 @@ using System.Web.Services;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
 using System.Net.Http;
+using System.ServiceModel;
+using System.ServiceModel.Web;
 /// <summary>
 /// Сводное описание для LibraryService
 /// </summary>
@@ -29,7 +31,7 @@ public class LibraryService : System.Web.Services.WebService
         //"SELECT * FROM BOOK"
         if (!validateToken(token, "GetAllBooks"))
         {
-            throw new Exception("not valid token");
+            return null;
         }
         
         return GetBooksParametred(null, null);
@@ -42,7 +44,7 @@ public class LibraryService : System.Web.Services.WebService
         //queryString += "'" + name + "'";
         if (!validateToken(token, "GetAllBooks"))
         {
-            throw new Exception("not valid token");
+            return null;
         }
         return GetBooksParametred(name, null);
     }
@@ -53,7 +55,7 @@ public class LibraryService : System.Web.Services.WebService
         //"SELECT * FROM BOOK WHERE isAvailable = 1"
         if (!validateToken(token, "GetAllBooks"))
         {
-            throw new Exception("not valid token");
+            return null;
         }
         return GetBooksParametred(null, true);
     }
@@ -106,7 +108,7 @@ public class LibraryService : System.Web.Services.WebService
     {
         if (!validateToken(token, "OrderBook"))
         {
-            throw new Exception("not valid token");
+            return false;
         }
         return UpdateBookAvailability(bookId, false);
     }
@@ -145,7 +147,7 @@ public class LibraryService : System.Web.Services.WebService
     {
         if (!validateToken(token, "AddNewBook"))
         {
-            throw new Exception("not valid token");
+            return false;
         }
 
         using (SqlConnection connection = new SqlConnection(databaseConnection))
@@ -175,7 +177,7 @@ public class LibraryService : System.Web.Services.WebService
     {
         if (!validateToken(token, "RemoveBook"))
         {
-            throw new Exception("not valid token");
+            return false;
         }
 
         using (SqlConnection connection = new SqlConnection(databaseConnection))
@@ -247,7 +249,10 @@ public class LibraryService : System.Web.Services.WebService
         return tokens;
     }
 
-    [WebMethod]
+    [OperationContract]
+    [WebInvoke(Method = "POST", UriTemplate = "/AddToken",
+            RequestFormat = WebMessageFormat.Json,
+            ResponseFormat = WebMessageFormat.Json)]
     public Token AddToken(Token token)
     {
         tokens.Add(token);
