@@ -4,6 +4,8 @@ using System.Web.Services;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
 using System.Net.Http;
+using System.ServiceModel;
+using System.ServiceModel.Web;
 /// <summary>
 /// Сводное описание для LibraryService
 /// </summary>
@@ -247,7 +249,10 @@ public class LibraryService : System.Web.Services.WebService
         return tokens;
     }
 
-    [WebMethod]
+    [OperationContract]
+    [WebInvoke(Method = "POST", UriTemplate = "/AddToken",
+            RequestFormat = WebMessageFormat.Json,
+            ResponseFormat = WebMessageFormat.Json)]
     public Token AddToken(Token token)
     {
         tokens.Add(token);
