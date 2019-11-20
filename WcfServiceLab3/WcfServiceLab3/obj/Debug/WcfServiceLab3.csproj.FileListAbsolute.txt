@@ -65,3 +65,4 @@ D:\University\Service-oriented\Desktop\Lab3LibraryService\WcfServiceLab3\WcfServ
 D:\University\Service-oriented\Desktop\Lab3LibraryService\WcfServiceLab3\WcfServiceLab3\obj\Debug\WcfServiceLab3.csproj.CopyComplete
 D:\University\Service-oriented\Desktop\Lab3LibraryService\WcfServiceLab3\WcfServiceLab3\obj\Debug\WcfServiceLab3.dll
 D:\University\Service-oriented\Desktop\Lab3LibraryService\WcfServiceLab3\WcfServiceLab3\obj\Debug\WcfServiceLab3.pdb
+D:\University\Service-oriented\Desktop\Lab3LibraryService\WcfServiceLab3\WcfServiceLab3\bin\MySql.Data.dll

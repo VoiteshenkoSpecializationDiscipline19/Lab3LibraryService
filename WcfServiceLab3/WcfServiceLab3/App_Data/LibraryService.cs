@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Net.Http;
 using System.ServiceModel;
 using System.ServiceModel.Web;
+using MySql.Data.MySqlClient;
 /// <summary>
 /// Сводное описание для LibraryService
 /// </summary>
@@ -17,6 +18,9 @@ public class LibraryService : System.Web.Services.WebService
     public const string XmlNS = "http://asmx.libraryService.com/";
     private const string databaseConnection = "Data Source=(localdb)\\MSSQLLocalDB;AttachDbFilename=D:\\home\\site\\wwwroot\\App_Data\\library.mdf;Integrated Security=True";
     private static readonly HttpClient client = new HttpClient();
+
+    private const string connStr = "server=remotemysql.com;Port=3306;Database=KkaqCdtZe4;Uid=KkaqCdtZe4;Pwd=oL7JReLSAe";
+    private MySqlConnection conn = new MySqlConnection(connStr);
 
     public LibraryService()
     {
@@ -63,9 +67,10 @@ public class LibraryService : System.Web.Services.WebService
     {
         List<Book> bookList = new List<Book>();
         bool isWhere = false;
-        using (SqlConnection connection = new SqlConnection(databaseConnection))
+        //using (SqlConnection connection = new SqlConnection(databaseConnection))
         {
-            string queryString = "SELECT * FROM BOOK ";
+            conn.Open();
+            string queryString = "SELECT * FROM Book ";
             if (!string.IsNullOrEmpty(bookName))
             {
                 queryString += "WHERE name='" + bookName + "'";
@@ -76,10 +81,9 @@ public class LibraryService : System.Web.Services.WebService
                 queryString += (!isWhere ? "WHERE" : "AND") + " isAvailable=" + (isAvailable.Value ? "1" : "0");
             }
 
-            SqlCommand command = new SqlCommand(queryString, connection);
-            command.Connection.Open();
+            MySqlCommand command = new MySqlCommand(queryString, conn);
 
-            SqlDataReader reader = command.ExecuteReader();
+            MySqlDataReader reader = command.ExecuteReader();
             try
             {
                 while (reader.Read())
@@ -97,6 +101,7 @@ public class LibraryService : System.Web.Services.WebService
             finally
             {
                 reader.Close();
+                conn.Close();
             }
         }
         return bookList;
@@ -121,22 +126,23 @@ public class LibraryService : System.Web.Services.WebService
     private bool UpdateBookAvailability(int bookId, bool isAvailable)
     {
 
-        using (SqlConnection connection = new SqlConnection(databaseConnection))
+        //using (SqlConnection connection = new SqlConnection(databaseConnection))
         {
-            string queryString = "UPDATE BOOK SET isAvailable= ";
+            conn.Open();
+            string queryString = "UPDATE Book SET isAvailable= ";
             queryString += (isAvailable ? "1" : "0") + " ";
             queryString += "WHERE id=" + bookId;
 
-            SqlCommand command = new SqlCommand(queryString, connection);
+            MySqlCommand command = new MySqlCommand(queryString, conn);
             try
             {
-                command.Connection.Open();
                 command.ExecuteNonQuery();
             }
             catch
             {
                 return false;
             }
+            conn.Close();
             return true;
         }
     }
@@ -149,24 +155,25 @@ public class LibraryService : System.Web.Services.WebService
             return false;
         }
 
-        using (SqlConnection connection = new SqlConnection(databaseConnection))
+        //using (SqlConnection connection = new SqlConnection(databaseConnection))
         {
-            string queryString = "INSERT INTO BOOK VALUES (";
+            conn.Open();
+            string queryString = "INSERT INTO Book VALUES (";
             queryString += book.ID + ", ";
             queryString += book.Name + ", ";
             queryString += book.AuthorName + ", ";
             queryString += (book.IsAvailable ? "1" : "0") + ");";
 
-            SqlCommand command = new SqlCommand(queryString, connection);
+            MySqlCommand command = new MySqlCommand(queryString, conn);
             try
             {
-                command.Connection.Open();
                 command.ExecuteNonQuery();
             }
             catch
             {
                 return false;
             }
+            conn.Close();
             return true;
         }
     }
@@ -179,20 +186,21 @@ public class LibraryService : System.Web.Services.WebService
             return false;
         }
 
-        using (SqlConnection connection = new SqlConnection(databaseConnection))
+        //using (SqlConnection connection = new SqlConnection(databaseConnection))
         {
-            string queryString = "DELETE FROM BOOK WHERE id=" + bookId;
+            conn.Open();
+            string queryString = "DELETE FROM Book WHERE id=" + bookId;
 
-            SqlCommand command = new SqlCommand(queryString, connection);
+            MySqlCommand command = new MySqlCommand(queryString, conn);
             try
             {
-                command.Connection.Open();
                 command.ExecuteNonQuery();
             }
             catch
             {
                 return false;
             }
+            conn.Close();
             return true;
         }
     }
